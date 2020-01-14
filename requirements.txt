@@ -22,8 +22,6 @@ jedi==0.15.1
 Jinja2==2.10.3
 joblib==0.14.1
 jsonschema==3.2.0
-jupyter-client==5.3.4
-jupyter-core==4.6.1
 kiwisolver==1.1.0
 MarkupSafe==1.1.1
 mistune==0.8.4
@@ -62,4 +60,3 @@ webencodings==0.5.1
 Werkzeug==0.16.0
 widgetsnbextension==3.5.1
 yarg==0.1.9
-zipp==0.6.0
