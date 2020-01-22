@@ -15,7 +15,7 @@ app = Flask(__name__)
 ###########################################################
 # CONFIG TO BE DONE
 #
-cluster = pymongo.MongoClient('mongodb://faceDBUsr:13012020@139.59.34.77:27017/facedb')
+cluster = pymongo.MongoClient('mongodb+srv://facedbUsr:KePf0nvdVkC689ik@t38-cluster-bzm1g.mongodb.net/test?retryWrites=true&w=majority')
 db = cluster["facedb"]
 collection = db["faces"]
 ###########################################################
