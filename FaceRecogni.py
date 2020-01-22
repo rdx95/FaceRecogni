@@ -58,7 +58,7 @@ def compare():
         if file.filename == '':
             return(jsonify(message="no filename"))
         else:
-            path = os.path.join(os.getcwd(), 'static/unknown')
+            path = os.path.join(os.getcwd(), 'static/')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
             return (compare_mod(sav))
