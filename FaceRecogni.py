@@ -39,14 +39,17 @@ def home():
 
 @app.route('/learn', methods=['POST', 'GET'])
 def learn():
-    if request.method == 'POST' and 'image' in request.files and 'name' in request.form:
-        file = request.files['image']
-        name = request.form['name']
-        file.filename = '{}.jpg'.format(name)
-        path = os.path.join(os.getcwd(), 'static/known')
-        sav = os.path.join(path, secure_filename(file.filename))
-        file.save(sav)
-        return learn_encoding(sav, name)
+    if request.method == 'POST': 
+        if 'image' in request.files and 'name' in request.form:
+            file = request.files['image']
+            name = request.form['name']
+            file.filename = '{}.jpg'.format(name)
+            path = os.path.join(os.getcwd(), 'static/known')
+            sav = os.path.join(path, secure_filename(file.filename))
+            file.save(sav)
+            return learn_encoding(sav, name)
+        else :
+            return(jsonify(message="FILE or NAME missing"))
     else:
         return(jsonify(message="INVALID HTTP METHOD"))
 
@@ -54,15 +57,18 @@ def learn():
 @app.route('/compare', methods=['POST', 'GET'])
 def compare():
     if request.method == 'POST':
-        file = request.files['image']
-        if file.filename == '':
-            return(jsonify(message="no filename"))
-        else:
-            path = os.path.join(os.getcwd(), 'static/')
-            sav = os.path.join(path, secure_filename(file.filename))
-            file.save(sav)
-            return (compare_mod(sav))
-        return jsonify(message="sorry")
+        if 'image' in request.files :
+            file = request.files['image']
+            if file.filename == '':
+                return(jsonify(message="no filename"))
+            else:
+                path = os.path.join(os.getcwd(), 'static/')
+                sav = os.path.join(path, secure_filename(file.filename))
+                file.save(sav)
+                return (compare_mod(sav))
+            return jsonify(message="sorry")
+        else :
+            return(jsonify(message="FILE NOT FOUND"))    
     else:
         return(jsonify(status='403', message='method not allowed'))
 
