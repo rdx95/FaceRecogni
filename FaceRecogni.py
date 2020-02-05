@@ -42,7 +42,7 @@ def home():
 def learn():
     if request.method == 'POST': 
         if 'image' in request.files and 'name' in request.form:
-            start = timeit.timeit()             # start time
+            start = timeit.timeit()             # start time --1
             file = request.files['image']
             name = request.form['name']
             file.filename = '{}.jpg'.format(name)
@@ -64,10 +64,11 @@ def compare():
             if file.filename == '':
                 return(jsonify(message="no filename"))
             else:
+                start = timeit.timeit()         # start time --2
                 path = os.path.join(os.getcwd(), 'static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                return (compare_mod(sav))
+                return (compare_mod(sav,start))
             return jsonify(message="sorry")
         else :
             return(jsonify(message="FILE NOT FOUND"))    
@@ -87,8 +88,8 @@ def learn_encoding(path, name, start):
         x.insert(i, item)
     data = {'name': name, 'encoding': x}
     collection.insert_one(data)
-    end = timeit.timeit()               # end time
-    return jsonify(message="encoding saved successfully",time=(start - end))
+    end = timeit.timeit()               # end time --1
+    return jsonify(message="encoding saved successfully",time=(end - start))
 
 
 def fetch_all():
@@ -102,7 +103,7 @@ def fetch_all():
     return known_names, encodings
 
 
-def compare_mod(path):
+def compare_mod(path, start):
     k_names, encodes = fetch_all()
     test_encodes = get_encoding(path)
     dist = face_recognition.face_distance(encodes, test_encodes)
@@ -112,7 +113,8 @@ def compare_mod(path):
     if dist[rank] < 0.5:
         # print(best_match)
         # print(dist[rank])
-        return(jsonify(best_match=best_match, distance=dist[rank]))
+        end = timeit.timeit()           # end time --2
+        return(jsonify(best_match=best_match, distance=dist[rank], time=(end - start)))
     else:
         return jsonify(message='unknown')
 
