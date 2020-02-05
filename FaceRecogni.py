@@ -1,4 +1,5 @@
 import os
+import timeit
 from flask import Flask, request, jsonify, render_template
 import numpy as np
 from werkzeug.utils import secure_filename
@@ -41,13 +42,14 @@ def home():
 def learn():
     if request.method == 'POST': 
         if 'image' in request.files and 'name' in request.form:
+            start = timeit.timeit()             # start time
             file = request.files['image']
             name = request.form['name']
             file.filename = '{}.jpg'.format(name)
             path = os.path.join(os.getcwd(), 'static/known')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
-            return learn_encoding(sav, name)
+            return learn_encoding(sav, name, start)
         else :
             return(jsonify(message="FILE or NAME missing"))
     else:
@@ -77,7 +79,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
 
-def learn_encoding(path, name):
+def learn_encoding(path, name, start):
     output = []
     x = []
     encoding = get_encoding(path)
@@ -85,7 +87,8 @@ def learn_encoding(path, name):
         x.insert(i, item)
     data = {'name': name, 'encoding': x}
     collection.insert_one(data)
-    return jsonify(message="encoding saved successfully")
+    end = timeit.timeit()               # end time
+    return jsonify(message="encoding saved successfully",time=(start - end))
 
 
 def fetch_all():
