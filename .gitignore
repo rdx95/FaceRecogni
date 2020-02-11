@@ -133,3 +133,4 @@ dmypy.json
 
 #others
 app/config.py
+app/uploads
