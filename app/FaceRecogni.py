@@ -15,7 +15,8 @@ app = Flask(__name__)
 
 
 ###########################################################
-# CONFIG TO BE DONE
+# CONFIGS
+app.config.from_pyfile('config.py')
 cluster = pymongo.MongoClient(app.config["URI"])
 db = cluster["facedb"]
 collection = db["faces"]
