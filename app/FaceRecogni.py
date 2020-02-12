@@ -30,7 +30,7 @@ def home():
         dict = {}
         dat = collection.find({}, {'name': 1})
         for i in dat:
-            if os.path.exists('static/known/{}.jpg'.format(i['name'])):
+            if os.path.exists('app/static/known/{}.jpg'.format(i['name'])):
                 dict.update({i['name']: ('known/{}.jpg'.format(i['name']))})
             else:
                 pass
@@ -48,7 +48,7 @@ def learn():
             file = request.files['image']
             name = request.form['name']
             file.filename = '{}.jpg'.format(name)
-            path = os.path.join(os.getcwd(), 'static/known')
+            path = os.path.join(os.getcwd(), 'app/static/known')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
             return learn_encoding(sav, name, start)
@@ -67,7 +67,7 @@ def compare():
                 return(jsonify(message="no filename"))
             else:
                 start = timeit.timeit()         # start time --2
-                path = os.path.join(os.getcwd(), 'static/')
+                path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
                 return (compare_mod(sav,start))
