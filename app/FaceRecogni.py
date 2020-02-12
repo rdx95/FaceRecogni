@@ -11,9 +11,6 @@ from pymongo import MongoClient
 import face_recognition
 
 
-app = Flask(__name__)
-
-
 ###########################################################
 # CONFIGS
 app.config.from_pyfile('config.py')
