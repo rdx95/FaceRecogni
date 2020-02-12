@@ -22,6 +22,10 @@ db = cluster["facedb"]
 collection = db["faces"]
 ###########################################################
 
+@app.route('/test')
+def test():
+    return(jsonify("test successfull"))
+
 
 @app.route('/', methods=['GET'])
 def home():
