@@ -83,15 +83,18 @@ if __name__ == "__main__":
 
 
 def learn_encoding(path, name, start):
-    output = []
-    x = []
-    encoding = get_encoding(path)
-    for i, item in enumerate(encoding):
-        x.insert(i, item)
-    data = {'name': name, 'encoding': x}
-    collection.insert_one(data)
-    end = timeit.timeit()               # end time --1
-    return jsonify(message="encoding saved successfully",time=(end - start))
+    try:
+        output = []
+        x = []
+        encoding = get_encoding(path)
+        for i, item in enumerate(encoding):
+            x.insert(i, item)
+        data = {'name': name, 'encoding': x}
+        collection.insert_one(data)
+        end = timeit.timeit()               # end time --1
+        return jsonify(message="encoding saved successfully",time=(end - start))
+    except:
+        return jsonify(message="an unexpected error occured")
 
 
 def fetch_all():
