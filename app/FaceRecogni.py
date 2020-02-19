@@ -44,14 +44,14 @@ def home():
 def learn():
     if request.method == 'POST': 
         if 'image' in request.files and 'name' in request.form:
-            start = timeit.timeit()             # start time --1
+            # start = timeit.timeit()             # start time --1
             file = request.files['image']
             name = request.form['name']
             file.filename = '{}.jpg'.format(name)
             path = os.path.join(os.getcwd(), 'app/static/known')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
-            return learn_encoding(sav, name, start)
+            return learn_encoding(sav, name)
         else :
             return(jsonify(message="FILE or NAME missing"))
     else:
@@ -66,11 +66,11 @@ def compare():
             if file.filename == '':
                 return(jsonify(message="no filename"))
             else:
-                start = timeit.timeit()         # start time --2
+                # start = timeit.timeit()         # start time --2
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                return (compare_mod(sav,start))
+                return (compare_mod(sav))
             return jsonify(message="sorry")
         else :
             return(jsonify(message="FILE NOT FOUND"))    
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
 
-def learn_encoding(path, name, start):
+def learn_encoding(path, name):
     try:
         output = []
         x = []
@@ -91,8 +91,8 @@ def learn_encoding(path, name, start):
             x.insert(i, item)
         data = {'name': name, 'encoding': x}
         collection.insert_one(data)
-        end = timeit.timeit()               # end time --1
-        return jsonify(message="encoding saved successfully",time=(end - start))
+        # end = timeit.timeit()               # end time --1
+        return jsonify(message="encoding saved successfully")
     except:
         return jsonify(message="an unexpected error occured")
 
@@ -108,7 +108,7 @@ def fetch_all():
     return known_names, encodings
 
 
-def compare_mod(path, start):
+def compare_mod(path):
     k_names, encodes = fetch_all()
     test_encodes = get_encoding(path)
     dist = face_recognition.face_distance(encodes, test_encodes)
@@ -118,14 +118,13 @@ def compare_mod(path, start):
     if dist[rank] < 0.5:
         # print(best_match)
         # print(dist[rank])
-        end = timeit.timeit()           # end time --2
-        return(jsonify(best_match=best_match, distance=dist[rank], time=(end - start)))
+        # end = timeit.timeit()           # end time --2
+        return(jsonify(best_match=best_match, distance=dist[rank]))
     else:
         return jsonify(message='unknown')
 
 
 def get_encoding(path):
     id1 = face_recognition.load_image_file(path)
-    encoding = face_recognition.face_encodings(
-        id1)[0]  # to pass first index of ndarray
+    encoding = face_recognition.face_encodings(id1)[0]  # to pass first index of ndarray
     return encoding
