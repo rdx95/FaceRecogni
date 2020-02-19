@@ -90,7 +90,8 @@ def checklabel():
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                result=compare_mod(sav)
+                res=compare_mod(sav)
+                result = res.json()
                 if result['best_match'] == name :
                     return(jsonify(message="image matches the label"))
                 else:
