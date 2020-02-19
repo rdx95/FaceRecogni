@@ -90,8 +90,8 @@ def checklabel():
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                res=compare_mod(sav)
-                result = res.json()
+                result=compare_mod(sav)
+                # result = res.json()
                 if result['best_match'] == name :
                     return(jsonify(message="image matches the label"))
                 else:
@@ -143,7 +143,7 @@ def compare_mod(path):
         # print(best_match)
         # print(dist[rank])
         # end = timeit.timeit()           # end time --2
-        return(jsonify(best_match=best_match, distance=dist[rank]))
+        return({'best_match':best_match, 'distance':dist[rank]})
     else:
         return jsonify(message='unknown')
 
