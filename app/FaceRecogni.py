@@ -78,6 +78,29 @@ def compare():
         return(jsonify(status='403', message='method not allowed'))
 
 
+@app.route('/checklabel', methods=['GET','POST'])
+def checklabel():
+    if request.method == 'POST' :
+        if 'image' in request.files and 'name' in request.form:
+            file = request.files['image']
+            name = request.form['name']
+            if file.filename == '':
+                return(jsonify(message="error with filename"))
+            else :              
+                path = os.path.join(os.getcwd(), 'app/static/')
+                sav = os.path.join(path, secure_filename(file.filename))
+                file.save(sav)
+                result=compare_mod(sav)
+                if result['best_match'] == name :
+                    return(jsonify(message="image matches the label"))
+                else:
+                    return(jsonify(message="label doesnt match"))
+            # return jsonify(message="sorry")
+        else:
+            return(jsonify(message="Missing Parameters"))    
+    else: 
+        return(jsonify(status='403', message='method not allowed'))
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
