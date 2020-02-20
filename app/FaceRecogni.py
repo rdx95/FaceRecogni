@@ -47,11 +47,12 @@ def learn():
             # start = timeit.timeit()             # start time --1
             file = request.files['image']
             name = request.form['name']
+            app = request.form['app']
             file.filename = '{}.jpg'.format(name)
             path = os.path.join(os.getcwd(), 'app/static/known')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
-            return learn_encoding(sav, name)
+            return learn_encoding(sav, name, app)
         else :
             return(jsonify(message="FILE or NAME missing"))
     else:
@@ -106,14 +107,14 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
 
-def learn_encoding(path, name):
+def learn_encoding(path, name, app):
     try:
         output = []
         x = []
         encoding = get_encoding(path)
         for i, item in enumerate(encoding):
             x.insert(i, item)
-        data = {'name': name, 'encoding': x}
+        data = {'name': name, 'encoding': x, 'app': app}
         collection.insert_one(data)
         # end = timeit.timeit()               # end time --1
         return jsonify(message="encoding saved successfully")
