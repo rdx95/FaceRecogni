@@ -140,7 +140,7 @@ def compare_mod(path):
     rank = np.argmin(dist)
     best_match = k_names[rank]
     # set compare threshold [lesser the value better the accuracy]
-    if dist[rank] < 0.42:
+    if dist[rank] < 0.4000:
         # print(best_match)
         # print(dist[rank])
         # end = timeit.timeit()           # end time --2
