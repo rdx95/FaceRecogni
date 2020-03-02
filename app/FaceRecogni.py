@@ -157,7 +157,7 @@ def searchAndCompare(img,name):
     if encode is None:
         return(jsonify(message='No Data Related'))
     else :
-        dist = face_recognition.face_distance(encode['encode'], test_encode)
+        dist = face_recognition.face_distance(encode['encoding'], test_encode)
         if dist < 0.400 :
             return({'message':'image matches the label', 'distance':dist})
         else :
