@@ -1,5 +1,5 @@
 from app import app
-import os
+import os, sys
 import timeit
 from flask import Flask, request, jsonify, render_template
 import numpy as np
@@ -152,17 +152,14 @@ def get_encoding(path):
     return encoding
 
 def searchAndCompare(img,name):
-    try :
-        test_encode = get_encoding(img)
-        encode = collection.find_one({"name": name},{'name': 1, 'encoding':1})
-        if encode is None:
-            return(jsonify(message='No Data Related'))
+    test_encode = get_encoding(img)
+    encode = collection.find_one({"name": name},{'name': 1, 'encoding':1})
+    if encode is None:
+        return(jsonify(message='No Data Related'))
+    else :
+        dist = face_recognition.face_distance(encode['encode'], test_encode)
+        if dist < 0.400 :
+            return({'message':'image matches the label', 'distance':dist})
         else :
-            dist = face_recognition.face_distance(encode['encode'], test_encode)
-            if dist < 0.400 :
-                return({'message':'image matches the label', 'distance':dist})
-            else :
-                return(jsonify(message='unmatched label'))
-    except :
-        return(jsonify(message='some error has occured'))
+            return(jsonify(message='unmatched label'))
 
