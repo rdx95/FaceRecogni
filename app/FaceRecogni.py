@@ -161,5 +161,5 @@ def searchAndCompare(img,name):
         if dist < 0.400 :
             return({'message':'image matches the label', 'distance':dist})
         else :
-            return(jsonify(message='unmatched label'))
+            return(jsonify(message='unmatched label')) 
 
