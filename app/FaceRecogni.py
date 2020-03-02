@@ -163,6 +163,6 @@ def searchAndCompare(img,name):
                 return({'message':'image matches the label', 'distance':dist})
             else :
                 return(jsonify(message='unmatched label'))
-    except BaseException as e:
+    except Exception as e:
         return(jsonify(message=e.message))
 
