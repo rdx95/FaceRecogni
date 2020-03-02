@@ -91,12 +91,12 @@ def checklabel():
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                result=compare_mod(sav)
-                # result = res.json()
-                if result['best_match'] == name :
-                    return(jsonify(message="image matches the label"))
-                else:
-                    return(jsonify(message="label doesnt match"))
+                result=searchAndCompare(sav,name)
+                return(result)
+                # if result['best_match'] == name :
+                #     return(jsonify(message="image matches the label"))
+                # else:
+                #     return(jsonify(message="label doesnt match"))
             # return jsonify(message="sorry")
         else:
             return(jsonify(message="Missing Parameters"))    
@@ -141,9 +141,6 @@ def compare_mod(path):
     best_match = k_names[rank]
     # set compare threshold [lesser the value better the accuracy]
     if dist[rank] < 0.4000:
-        # print(best_match)
-        # print(dist[rank])
-        # end = timeit.timeit()           # end time --2
         return({'best_match':best_match, 'distance':dist[rank]})
     else:
         return jsonify(message='unknown')
@@ -153,3 +150,19 @@ def get_encoding(path):
     id1 = face_recognition.load_image_file(path)
     encoding = face_recognition.face_encodings(id1)[0]  # to pass first index of ndarray
     return encoding
+
+def searchAndCompare(img,name):
+    try :
+        test_encode = get_encoding(img)
+        encode = collection.find_one({"name": name},{'name': 1, 'encoding':1})
+        if encode is None:
+            return(jsonify(message='No Data Related'))
+        else :
+            dist = face_recognition.face_distance(encode['encode'], test_encode)
+            if dist < 0.400 :
+                return({'message':'image matches the label', 'distance':dist})
+            else :
+                return(jsonify(message='unmatched label'))
+    except BaseException as e:
+        return(jsonify(message=e.message))
+
