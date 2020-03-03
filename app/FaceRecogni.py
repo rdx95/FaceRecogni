@@ -153,15 +153,16 @@ def get_encoding(path):
 
 def searchAndCompare(img,name):
     test_encode = get_encoding(img)
-    encode = collection.find_one({"name": name},{'name': 1, 'encoding':1})
-    if encode is None:
+    data = collection.find_one({"name": name},{'name': 1, 'encoding':1})
+    if data is None:
         return(jsonify(message='No Data Related'))
     else :
-        print(test_encode)
-        return(test_encode)
-        # dist = face_recognition.face_distance(encode['encoding'], test_encode)
-        # if dist < 0.400 :
-        #     return({'message':'image matches the label', 'distance':dist})
-        # else :
-        #     return(jsonify(message='unmatched label')) 
+        encodes = []
+        encodes.insert(0,data['encoding'])
+        encode_data = np.asarray(encodes)
+        dist = face_recognition.face_distance(encode_data, test_encode)[0]
+        if dist < 0.400 :
+            return(jsonify(message='image matches the label', distance=dist))
+        else :
+            return(jsonify(message='unmatched label'))
 
