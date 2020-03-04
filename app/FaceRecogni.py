@@ -79,6 +79,7 @@ def compare():
         return(jsonify(status='403', message='method not allowed'))
 
 @app.route('/checklabel', methods=['GET','POST'])
+@cross_origin(origin='*')
 def checklabel():
     if request.method == 'POST' :
         if 'image' in request.files and 'name' in request.form:
