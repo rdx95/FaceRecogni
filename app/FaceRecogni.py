@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 import pymongo
 from pymongo import MongoClient
-
+from flask_cors import CORS, cross_origin
 import face_recognition
 
 
@@ -80,6 +80,7 @@ def compare():
 
 @app.route('/checklabel', methods=['GET','POST'])
 @cross_origin(origin='*')
+
 def checklabel():
     if request.method == 'POST' :
         if 'image' in request.files and 'name' in request.form:
