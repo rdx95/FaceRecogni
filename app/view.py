@@ -6,7 +6,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
 
-@app.route('/addnew', methods=['GET','POST'])
+@app.route('/comparelabel', methods=['GET','POST'])
 def addnew():
     if request.method == 'POST':
         pass

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="static/js/webcam.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        #my_camera{
+         width: 320px;
+         height: 240px;
+         border: 1px solid black;
+        }
+        </style>
+    <title></title>
+</head>
+<body>
+    <div id="my_camera"></div>
+<input type=button value="Take Snapshot" onClick="take_snapshot()">
+<!-- <input type="button"> -->
+<div id="results" >
+    <img id="res_img" src="" >
+    <input id="submit" type="button" value="Submit" >
+</div>
+ 
+<!-- Webcam.min.js -->
+<script type="text/javascript" src="static/js/cam.js"></script>
+<!-- Configure a few settings and attach camera -->
+
+
+
+</body>
+</html>
