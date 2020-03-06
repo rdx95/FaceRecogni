@@ -11,4 +11,4 @@ def addnew():
     if request.method == 'POST':
         pass
     else :
-        return render_template('chklabel.html')
+        return render_template('compare.html')
