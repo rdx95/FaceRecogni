@@ -10,6 +10,9 @@ from pymongo import MongoClient
 from flask_cors import CORS, cross_origin
 import face_recognition
 
+from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
 
 ###########################################################
 # CONFIGS
@@ -17,14 +20,53 @@ app.config.from_pyfile('config.py')
 cluster = pymongo.MongoClient(app.config["URI"])
 db = cluster["facedb"]
 collection = db["faces"]
+app_collection = db['app']
+###########################################################
+
+###########################################################
+def token_required(f):
+    @wraps(f)
+    def decorator():
+        token = None
+
+        if 'x-access-tokens' in request.headers:
+            token = request.headers['x-access-tokens']
+
+        if not token:
+            return(jsonify(message='Token Missing'))
+
+        t = app_collection.find_one({'token':token})
+
+        if t is not None:
+            current_user=t['id']
+        else :
+            return(jsonify(message='Invalid Token'))
+
+        return f(current_user)
+    return decorator
 ###########################################################
 
 @app.route('/test')
 def test():
     return(jsonify("test successfull"))
 
+@app.route('/gettoken')
+def gettoken():
+    auth=request.authorization
+    if not auth or not auth.username or not auth.password :
+        return(jsonify(message='could not verify user',code='401'))
+    else:
+        user = app_collection.find_one({'id':auth.username},{'_id':0})
+        if check_password_hash(user['pwd'], auth.password):
+            if 'token' not in user :        
+                token = secrets.token_urlsafe(20)
+                app_collection.update_one({'id':auth.username},{"$set":{"token":token}})
+                return(jsonify({'token':token}))
+            else :
+                return(jsonify({'token':user['token']}))
+    return(jsonify(message='unexpected error occured'))
 
-@app.route('/', methods=['GET'])
+@app.route('/getall', methods=['GET'])
 def home():
     if request.method=='GET' :
         dict = {}
