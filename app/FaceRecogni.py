@@ -47,6 +47,7 @@ def token_required(f):
 ###########################################################
 
 @app.route('/test')
+@token_required
 def test():
     return(jsonify("test successfull"))
 
@@ -64,6 +65,8 @@ def gettoken():
                 return(jsonify({'token':token}))
             else :
                 return(jsonify({'token':user['token']}))
+        else :
+            return(jsonify(message='wrong password'))
     return(jsonify(message='unexpected error occured'))
 
 @app.route('/getall', methods=['GET'])
