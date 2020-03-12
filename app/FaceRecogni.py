@@ -11,7 +11,6 @@ from flask_cors import CORS, cross_origin
 import face_recognition
 
 from functools import wraps
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 
 ###########################################################
@@ -22,7 +21,7 @@ db = cluster["facedb"]
 collection = db["faces"]
 app_collection = db['app']
 ###########################################################
-
+bcrypt = Bcrypt(app)
 ###########################################################
 def token_required(f):
     @wraps(f)
