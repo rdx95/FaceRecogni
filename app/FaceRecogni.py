@@ -58,7 +58,7 @@ def gettoken():
         return(jsonify(message='could not verify user',code='401'))
     else:
         user = app_collection.find_one({'id':auth.username},{'_id':0})
-        if check_password_hash(user['pwd'], auth.password):
+        if bcrypt.check_password_hash(user['pwd'], auth.password):
             if 'token' not in user :        
                 token = secrets.token_urlsafe(20)
                 app_collection.update_one({'id':auth.username},{"$set":{"token":token}})
