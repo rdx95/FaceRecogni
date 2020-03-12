@@ -187,9 +187,12 @@ def compare_mod(path):
 
 
 def get_encoding(path):
-    id1 = face_recognition.load_image_file(path)
-    encoding = face_recognition.face_encodings(id1)[0]  # to pass first index of ndarray
-    return encoding
+    try:
+        id1 = face_recognition.load_image_file(path)
+        encoding = face_recognition.face_encodings(id1)[0]  # to pass first index of ndarray
+        return encoding
+    except Exception as e :
+        return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
 
 def searchAndCompare(img,name):
     test_encode = get_encoding(img)
