@@ -47,8 +47,8 @@ def token_required(f):
 
 @app.route('/test')
 @token_required
-def test():
-    return(jsonify("test successfull"))
+def test_func(uid):
+    return(jsonify(message="test successfull",user=uid))
 
 @app.route('/gettoken')
 def gettoken():
