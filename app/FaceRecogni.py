@@ -12,7 +12,7 @@ import face_recognition
 
 from functools import wraps
 from flask_bcrypt import Bcrypt
-
+import secrets
 ###########################################################
 # CONFIGS
 app.config.from_pyfile('config.py')
