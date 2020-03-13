@@ -49,7 +49,7 @@ document.getElementById("submit").addEventListener("click",function (e){
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "http://faces.t38.in/checklabel",
+        url: "https://faces.t38.in/checklabel",
 
         data: formDataToUpload,
         processData: false,
