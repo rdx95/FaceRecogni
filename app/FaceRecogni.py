@@ -181,17 +181,18 @@ def compare_mod(path):
     k_names, encodes = fetch_all()
     try:
         test_encodes = get_encoding(path)
+        dist = face_recognition.face_distance(encodes, test_encodes)
+        rank = np.argmin(dist)
+        best_match = k_names[rank]
+        # set compare threshold [lesser the value better the accuracy]
+        if dist[rank] < 0.4000:
+            return({'best_match':best_match, 'distance':dist[rank]})
+        else:
+            return jsonify(message='unknown')
     except Exception as e :
         return({'message':"Sorry, unable to detect face.. change the image and try again"})
 
-    dist = face_recognition.face_distance(encodes, test_encodes)
-    rank = np.argmin(dist)
-    best_match = k_names[rank]
-    # set compare threshold [lesser the value better the accuracy]
-    if dist[rank] < 0.4000:
-        return({'best_match':best_match, 'distance':dist[rank]})
-    else:
-        return jsonify(message='unknown')
+    
 
 
 def get_encoding(path):
