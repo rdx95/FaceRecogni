@@ -128,6 +128,7 @@ h3{
 
 .app canvas{
     display: none;
+    transform: rotateY(180deg);
 }
 
 
@@ -137,6 +138,7 @@ h3{
 .app #error-message.visible
 {
     display: block;
+    transform: rotateY(180deg);
 }
 
 .app .controls.visible{
