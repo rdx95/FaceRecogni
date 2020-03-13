@@ -151,7 +151,11 @@ def learn_encoding(path, name, app):
     try:
         output = []
         x = []
-        encoding = get_encoding(path)
+        try:
+            encoding = get_encoding(path)
+        except Exception as e :
+            return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+
         for i, item in enumerate(encoding):
             x.insert(i, item)
         data = {'name': name, 'encoding': x, 'app': app}
@@ -175,7 +179,11 @@ def fetch_all():
 
 def compare_mod(path):
     k_names, encodes = fetch_all()
-    test_encodes = get_encoding(path)
+    try:
+        test_encodes = get_encoding(path)
+    except Exception as e :
+        return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+
     dist = face_recognition.face_distance(encodes, test_encodes)
     rank = np.argmin(dist)
     best_match = k_names[rank]
@@ -195,7 +203,11 @@ def get_encoding(path):
         return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
 
 def searchAndCompare(img,name):
-    test_encode = get_encoding(img)
+    try:
+        test_encode = get_encoding(img)
+    except Exception as e:
+        return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+    
     data = collection.find_one({"name": name},{'name': 1, 'encoding':1})
     if data is None:
         return(jsonify(message='No Data Related'))
