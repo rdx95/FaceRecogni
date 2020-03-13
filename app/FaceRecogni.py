@@ -96,7 +96,7 @@ def learn():
             path = os.path.join(os.getcwd(), 'app/static/known')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
-            return learn_encoding(sav, name, app)
+            return(learn_encoding(sav, name, app))
         else :
             return(jsonify(message="FILE or NAME missing"))
     else:
@@ -154,7 +154,7 @@ def learn_encoding(path, name, app):
         try:
             encoding = get_encoding(path)
         except Exception as e :
-            return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+            return({'message':"Sorry, unable to detect face.. change the image and try again"})
 
         for i, item in enumerate(encoding):
             x.insert(i, item)
@@ -182,7 +182,7 @@ def compare_mod(path):
     try:
         test_encodes = get_encoding(path)
     except Exception as e :
-        return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+        return({'message':"Sorry, unable to detect face.. change the image and try again"})
 
     dist = face_recognition.face_distance(encodes, test_encodes)
     rank = np.argmin(dist)
@@ -200,13 +200,13 @@ def get_encoding(path):
         encoding = face_recognition.face_encodings(id1)[0]  # to pass first index of ndarray
         return encoding
     except Exception as e :
-        return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+        return({'message':"Sorry, unable to detect face.. change the image and try again"})
 
 def searchAndCompare(img,name):
     try:
         test_encode = get_encoding(img)
     except Exception as e:
-        return(jsonify(message="Sorry, unable to detect face.. change the image and try again"))
+        return({'message':"Sorry, unable to detect face.. change the image and try again"})
     
     data = collection.find_one({"name": name},{'name': 1, 'encoding':1})
     if data is None:
