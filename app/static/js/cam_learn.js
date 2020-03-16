@@ -141,7 +141,7 @@ upload_photo_btn.addEventListener("click", function (e) {
     var formDataToUpload = new FormData();
     formDataToUpload.append("image", blob, 'selfie.png');
     formDataToUpload.append("name", name_data);
-    formDataToUpload.append("app", app);
+    formDataToUpload.append("app", app_name);
     // formDataToUpload.append("name", window.prompt('What is the name ?'));
 
     console.log(formDataToUpload.getAll('name'));
