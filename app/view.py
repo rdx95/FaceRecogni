@@ -14,7 +14,7 @@ def addnew():
         return render_template('compare.html')
 
 @app.route('/learnenc', methods=['GET','POST'])
-def addnew():
+def learnnew():
     if request.method == 'POST':
         pass
     else :
