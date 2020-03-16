@@ -118,7 +118,7 @@ upload_photo_btn.addEventListener("click", function (e) {
 
     e.preventDefault();
     if (name_data == "" || app_name == "") {
-        alert("empty");
+        alert("please fill in the text box");
     } else {
         var y = document.getElementById("take-in");
         y.style.display = "none";
