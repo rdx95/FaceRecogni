@@ -1,10 +1,9 @@
-// References to all the element we will need.
 var video = document.querySelector('#camera-stream'),
     image = document.querySelector('#snap'),
      start_camera = document.querySelector('#start-camera'),
     controls = document.querySelector('.controls'),
     delete_photo_btn = document.querySelector('#delete-photo'),
-    upload_photo_btn = document.querySelector('#upload-photo'),
+    upload_photo_btn = document.querySelector('#upload-to-learn'),
     download_photo_btn = document.querySelector('#download-photo'),
     error_message = document.querySelector('#error-message'),
     take_photo_btn = document.querySelector('#take-photo');
@@ -66,8 +65,9 @@ take_photo_btn.addEventListener("click", function (e) {
     e.preventDefault();
 
     var snap = takeSnapshot();
-    var x = document.getElementById("op");
-    x.style.display = "none";
+    var i = document.getElementById("take-in"); 
+    i.style.display = "block"
+
     // Show image. 
     image.setAttribute('src', snap);
     image.classList.add("visible");
@@ -91,8 +91,10 @@ delete_photo_btn.addEventListener("click", function (e) {
     
     e.preventDefault();
 
+    var y = document.getElementById("take-in");
+    y.style.display = "none";
     var x = document.getElementById("op");
-    x.style.display = "none"
+    x.style.display = "none";
     // Hide image.
     image.setAttribute('src', "");
     image.classList.remove("visible");
@@ -113,6 +115,8 @@ upload_photo_btn.addEventListener("click", function (e) {
     
     e.preventDefault();
 
+    var y = document.getElementById("take-in");
+    y.style.display = "none";
     var x = document.getElementById("op");
 
     x.style.display = "block";
@@ -129,11 +133,17 @@ upload_photo_btn.addEventListener("click", function (e) {
     // Convert it to a blob to upload
     var blob = b64toBlob(realData, contentType);
 
+    //fetch data from form
+    var name_data = document.getElementById("name").value;
+    var app_name = document.getElementById("app").value;
+
     // Create a FormData and append the file with "image" as parameter name
     var formDataToUpload = new FormData();
     formDataToUpload.append("image", blob, 'selfie.png');
-    formDataToUpload.append("name", window.prompt('What is the name ?'));
-
+    formDataToUpload.append("name",name_data);
+    formDataToUpload.append("app",app);
+    // formDataToUpload.append("name", window.prompt('What is the name ?'));
+    
     console.log(formDataToUpload.getAll('name'));
 
 
@@ -142,7 +152,7 @@ upload_photo_btn.addEventListener("click", function (e) {
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "https://faces.t38.in/checklabel",
+        url: "https://faces.t38.in/learn",
 
         data: formDataToUpload,
         processData: false,
