@@ -132,6 +132,13 @@ h3{
 }
 
 
+.app #take-in{
+    display: none;
+}
+
+.app #op{
+    display: none;
+}
 
 .app video#camera-stream.visible,
 .app img#snap.visible,
