@@ -1,6 +1,6 @@
 var video = document.querySelector('#camera-stream'),
     image = document.querySelector('#snap'),
-     start_camera = document.querySelector('#start-camera'),
+    start_camera = document.querySelector('#start-camera'),
     controls = document.querySelector('.controls'),
     delete_photo_btn = document.querySelector('#delete-photo'),
     upload_photo_btn = document.querySelector('#upload-to-learn'),
@@ -65,7 +65,7 @@ take_photo_btn.addEventListener("click", function (e) {
     e.preventDefault();
 
     var snap = takeSnapshot();
-    var i = document.getElementById("take-in"); 
+    var i = document.getElementById("take-in");
     i.style.display = "block"
 
     // Show image. 
@@ -87,8 +87,8 @@ take_photo_btn.addEventListener("click", function (e) {
 
 
 delete_photo_btn.addEventListener("click", function (e) {
-   
-    
+
+
     e.preventDefault();
 
     var y = document.getElementById("take-in");
@@ -112,7 +112,7 @@ delete_photo_btn.addEventListener("click", function (e) {
 
 upload_photo_btn.addEventListener("click", function (e) {
 
-    
+
     e.preventDefault();
 
     var y = document.getElementById("take-in");
@@ -135,15 +135,15 @@ upload_photo_btn.addEventListener("click", function (e) {
 
     //fetch data from form
     var name_data = document.getElementById("name").value;
-    var app_name = document.getElementById("app").value;
+    var app_name = document.getElementById("app-data").value;
 
     // Create a FormData and append the file with "image" as parameter name
     var formDataToUpload = new FormData();
     formDataToUpload.append("image", blob, 'selfie.png');
-    formDataToUpload.append("name",name_data);
-    formDataToUpload.append("app",app);
+    formDataToUpload.append("name", name_data);
+    formDataToUpload.append("app", app);
     // formDataToUpload.append("name", window.prompt('What is the name ?'));
-    
+
     console.log(formDataToUpload.getAll('name'));
 
 
@@ -173,13 +173,13 @@ upload_photo_btn.addEventListener("click", function (e) {
             console.log(e.responseText);
             $("#res_msg").html(e.responseText);
             console.log("ERROR : ", e);
-            
+
 
         },
-        complete: function(){
+        complete: function () {
             console.log("Request Finished.");
         }
-    }); 
+    });
 
 });
 
