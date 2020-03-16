@@ -85,6 +85,7 @@ def home():
 
 
 @app.route('/learn', methods=['POST', 'GET'])
+@cross_origin(origin='*')
 def learn():
     if request.method == 'POST': 
         if 'image' in request.files and 'name' in request.form:
@@ -124,7 +125,6 @@ def compare():
 
 @app.route('/checklabel', methods=['GET','POST'])
 @cross_origin(origin='*')
-
 def checklabel():
     if request.method == 'POST' :
         if 'image' in request.files and 'name' in request.form:
