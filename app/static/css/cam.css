@@ -128,15 +128,24 @@ h3{
 
 .app canvas{
     display: none;
+    transform: rotateY(180deg);
 }
 
 
+.app #take-in{
+    display: none;
+}
+
+.app #op{
+    display: none;
+}
 
 .app video#camera-stream.visible,
 .app img#snap.visible,
 .app #error-message.visible
 {
     display: block;
+    transform: rotateY(180deg);
 }
 
 .app .controls.visible{
