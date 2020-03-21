@@ -85,6 +85,7 @@ def home():
 
 
 @app.route('/learn', methods=['POST', 'GET'])
+@token_required
 @cross_origin(origin='*')
 def learn():
     if request.method == 'POST': 
