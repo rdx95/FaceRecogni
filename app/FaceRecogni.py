@@ -98,7 +98,7 @@ def createapp():
 @app.route('/learn', methods=['POST', 'GET'])
 @token_required
 @cross_origin(origin='*')
-def learn():
+def learn(uid):
     if request.method == 'POST': 
         if 'image' in request.files and 'name' in request.form:
             # start = timeit.timeit()             # start time --1
