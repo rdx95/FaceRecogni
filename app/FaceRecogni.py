@@ -47,8 +47,8 @@ def token_required(f):
 
 @app.route('/test')
 @token_required
-def test_func(uid):
-    return(jsonify(message="test successfull",user=uid))
+def test_func(app_name):
+    return(jsonify(message="test successfull",user=app_name))
 
 @app.route('/gettoken')
 def gettoken():
@@ -98,18 +98,17 @@ def createapp():
 @app.route('/learn', methods=['POST', 'GET'])
 @token_required
 @cross_origin(origin='*')
-def learn(uid):
+def learn(app_name):
     if request.method == 'POST': 
         if 'image' in request.files and 'name' in request.form:
             # start = timeit.timeit()             # start time --1
             file = request.files['image']
             name = request.form['name']
-            app = request.form['app']
             file.filename = '{}.jpg'.format(name)
             path = os.path.join(os.getcwd(), 'app/static/known')
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
-            return(learn_encoding(sav, name, app))
+            return(learn_encoding(sav, name, app_name))
         else :
             return(jsonify(message="FILE or NAME missing"))
     else:
@@ -117,7 +116,8 @@ def learn(uid):
 
 
 @app.route('/compare', methods=['POST', 'GET'])
-def compare():
+@token_required
+def compare(app_name):
     if request.method == 'POST':
         if 'image' in request.files :
             file = request.files['image']
@@ -128,7 +128,7 @@ def compare():
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                return (compare_mod(sav))
+                return (compare_mod(sav,app_name))
             return jsonify(message="sorry")
         else :
             return(jsonify(message="FILE NOT FOUND"))    
@@ -178,8 +178,8 @@ def learn_encoding(path, name, app):
         return jsonify(message="an unexpected error occured")
 
 
-def fetch_all():
-    data = collection.find({})
+def fetch_faces(app_name):
+    data = collection.find({'app':app_name})
     known_names = []
     known_encodings = []
     for i, item in enumerate(data):
@@ -189,20 +189,23 @@ def fetch_all():
     return known_names, encodings
 
 
-def compare_mod(path):
-    k_names, encodes = fetch_all()
-    try:
-        test_encodes = get_encoding(path)
-        dist = face_recognition.face_distance(encodes, test_encodes)
-        rank = np.argmin(dist)
-        best_match = k_names[rank]
-        # set compare threshold [lesser the value better the accuracy]
-        if dist[rank] < 0.4000:
-            return({'best_match':best_match, 'distance':dist[rank]})
-        else:
-            return jsonify(message='unknown')
-    except Exception as e :
-        return({'message':"Sorry, unable to detect face.. change the image and try again"})
+def compare_mod(path,app_name):
+    k_names, encodes = fetch_faces(app_name)
+    if len(k_names)== 0 :
+        return(jsonify(message='No data available'))
+    else:
+        try:
+            test_encodes = get_encoding(path)
+            dist = face_recognition.face_distance(encodes, test_encodes)
+            rank = np.argmin(dist)
+            best_match = k_names[rank]
+            # set compare threshold [lesser the value better the accuracy]
+            if dist[rank] < 0.4000:
+                return({'best_match':best_match, 'distance':dist[rank]})
+            else:
+                return jsonify(message='unknown')
+        except Exception as e :
+            return({'message':"Sorry, unable to detect face.. change the image and try again"})
 
     
 
