@@ -83,6 +83,14 @@ def home():
     else :
         return(jsonify(message='INVALID HTTP METHOD'))
 
+@app.route('/createapp')
+def createapp():
+    if 'id' in request.form and 'pwd' in request.form :
+        password = bcrypt.generate_password_hash(request.form['pwd'])
+        app_collection.insert({'id':request.form['id'],'pwd':password})
+        return(jsonify(message='app created'))
+    else:
+        return(jsonify(message='missing parameters'))
 
 @app.route('/learn', methods=['POST', 'GET'])
 @token_required
