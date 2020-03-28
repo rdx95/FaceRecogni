@@ -146,7 +146,7 @@ upload_photo_btn.addEventListener("click", function (e) {
         var formDataToUpload = new FormData();
         formDataToUpload.append("image", blob, 'selfie.png');
         formDataToUpload.append("name", name_data);
-        formDataToUpload.append("app", app_name);
+        formDataToUpload.append("app", "T38");
         // formDataToUpload.append("name", window.prompt('What is the name ?'));
 
         console.log(formDataToUpload.getAll('name'));
@@ -158,7 +158,9 @@ upload_photo_btn.addEventListener("click", function (e) {
             type: "POST",
             enctype: 'multipart/form-data',
             url: "https://faces.t38.in/learn",
-
+            headers:{
+                "x-access-tokens": "XYXjx3fqYtwp1OjiLyNSGRlUp0A"
+            },
             data: formDataToUpload,
             processData: false,
             contentType: false,
