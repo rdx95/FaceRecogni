@@ -113,11 +113,11 @@ delete_photo_btn.addEventListener("click", function (e) {
 upload_photo_btn.addEventListener("click", function (e) {
 
     var name_data = document.getElementById("name").value;
-    var app_name = document.getElementById("app-data").value;
+    // var app_name = document.getElementById("app-data").value;
 
 
     e.preventDefault();
-    if (name_data == "" || app_name == "") {
+    if (name_data == "") {
         alert("please fill in the text box");
     } else {
         var y = document.getElementById("take-in");
