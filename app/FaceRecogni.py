@@ -95,6 +95,15 @@ def createapp():
     else:
         return(jsonify(message='Invalid Method'))
 
+
+"""
+method: POST
+headers: {  x-access-tokens:<token>,
+            conten-type:multipart-form-data }
+body:{  image:<img.jpg>,
+        name:<name>,
+        app:<app name>}
+"""
 @app.route('/learn', methods=['POST', 'GET'])
 @token_required
 @cross_origin(origin='*')
@@ -115,6 +124,14 @@ def learn(app_name):
         return(jsonify(message="INVALID HTTP METHOD"))
 
 
+
+"""
+method: POST
+headers:{  x-access-tokens:<token>,
+            conten-type:multipart-form-data }
+body:{  image:<img.jpg>
+        }
+"""
 @app.route('/compare', methods=['POST', 'GET'])
 @token_required
 def compare(app_name):
