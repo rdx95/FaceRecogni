@@ -143,7 +143,9 @@ upload_photo_btn.addEventListener("click", function (e) {
         type: "POST",
         enctype: 'multipart/form-data',
         url: "https://faces.t38.in/checklabel",
-
+        headers:{
+            "x-access-tokens": "XYXjx3fqYtwp1OjiLyNSGRlUp0A"
+        },
         data: formDataToUpload,
         processData: false,
         contentType: false,
