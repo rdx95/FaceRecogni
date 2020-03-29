@@ -139,3 +139,4 @@ app2.py
 mongotest.py
 .vscode/
 app/templates/static
+app/static
