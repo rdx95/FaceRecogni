@@ -1,7 +1,7 @@
 // References to all the element we will need.
 var video = document.querySelector('#camera-stream'),
     image = document.querySelector('#snap'),
-     start_camera = document.querySelector('#start-camera'),
+    start_camera = document.querySelector('#start-camera'),
     controls = document.querySelector('.controls'),
     delete_photo_btn = document.querySelector('#delete-photo'),
     upload_photo_btn = document.querySelector('#upload-photo'),
@@ -65,6 +65,9 @@ take_photo_btn.addEventListener("click", function (e) {
 
     e.preventDefault();
 
+    var i = document.getElementById("take-in");
+    i.style.display = "block"
+
     var snap = takeSnapshot();
     var x = document.getElementById("op");
     x.style.display = "none";
@@ -87,10 +90,11 @@ take_photo_btn.addEventListener("click", function (e) {
 
 
 delete_photo_btn.addEventListener("click", function (e) {
-   
-    
-    e.preventDefault();
 
+
+    e.preventDefault();
+    var i = document.getElementById("take-in");
+    i.style.display = "none"
     var x = document.getElementById("op");
     x.style.display = "none"
     // Hide image.
@@ -110,69 +114,73 @@ delete_photo_btn.addEventListener("click", function (e) {
 
 upload_photo_btn.addEventListener("click", function (e) {
 
-    
+    var name_data = document.getElementById("name").value;
     e.preventDefault();
+    if (name_data == "") {
+        alert("please fill in the text box");
+    } else {
+        var y = document.getElementById("take-in");
+        y.style.display = "none";
+        var x = document.getElementById("op");
 
-    var x = document.getElementById("op");
+        x.style.display = "block";
+        $("#res_msg").html(" ");
+        $("#res_dis").html(" ");
+        imgUrl = image.getAttribute('src');
+        // Split the base64 string in data and contentType
+        var block = imgUrl.split(";");
+        // Get the content type of the image
+        var contentType = block[0].split(":")[1];
+        // get the real base64 content of the file
+        var realData = block[1].split(",")[1];
 
-    x.style.display = "block";
-    $("#res_msg").html(" ");
-    $("#res_dis").html(" ");
-    imgUrl = image.getAttribute('src');
-    // Split the base64 string in data and contentType
-    var block = imgUrl.split(";");
-    // Get the content type of the image
-    var contentType = block[0].split(":")[1];
-    // get the real base64 content of the file
-    var realData = block[1].split(",")[1];
+        // Convert it to a blob to upload
+        var blob = b64toBlob(realData, contentType);
 
-    // Convert it to a blob to upload
-    var blob = b64toBlob(realData, contentType);
+        // Create a FormData and append the file with "image" as parameter name
+        var formDataToUpload = new FormData();
+        formDataToUpload.append("image", blob, 'selfie.png');
+        formDataToUpload.append("name", name_data);
 
-    // Create a FormData and append the file with "image" as parameter name
-    var formDataToUpload = new FormData();
-    formDataToUpload.append("image", blob, 'selfie.png');
-    formDataToUpload.append("name", window.prompt('What is the name ?'));
-
-    console.log(formDataToUpload.getAll('name'));
+        console.log(formDataToUpload.getAll('name'));
 
 
-    console.log(formDataToUpload);
+        console.log(formDataToUpload);
 
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "https://faces.t38.in/checklabel",
-        headers:{
-            "x-access-tokens": "XYXjx3fqYtwp1OjiLyNSGRlUp0A"
-        },
-        data: formDataToUpload,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 600000,
-        success: function (data) {
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "https://faces.t38.in/checklabel",
+            headers: {
+                "x-access-tokens": "XYXjx3fqYtwp1OjiLyNSGRlUp0A"
+            },
+            data: formDataToUpload,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
 
-            console.log(data);
-            console.log("SUCCESS : ", data.message);
-            $("#res_msg").html(data.message);
-            $("#res_dis").html(data.distance);
-            // $("#btnSubmit").prop("disabled", false);
+                console.log(data);
+                console.log("SUCCESS : ", data.message);
+                $("#res_msg").html(data.message);
+                $("#res_dis").html(data.distance);
+                // $("#btnSubmit").prop("disabled", false);
 
-        },
-        error: function (e) {
+            },
+            error: function (e) {
 
-            console.log(e.responseText);
-            $("#res_msg").html(e.responseText);
-            console.log("ERROR : ", e);
-            
+                console.log(e.responseText);
+                $("#res_msg").html(e.responseText);
+                console.log("ERROR : ", e);
 
-        },
-        complete: function(){
-            console.log("Request Finished.");
-        }
-    }); 
 
+            },
+            complete: function () {
+                console.log("Request Finished.");
+            }
+        });
+    }
 });
 
 

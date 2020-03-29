@@ -21,7 +21,7 @@
             <div class="controls">
                 <a href="#" id="delete-photo" title="Delete Photo" class="disabled"><i class="material-icons">delete</i></a>
                 <a href="#" id="take-photo" title="Take Photo"><i class="material-icons">camera_alt</i></a>
-                <a href="#" id="upload-photo" title="Upload Photo" class="disabled"><i class="material-icons">file_upload</i></a>  
+                <!-- <a href="#" id="upload-photo" title="Upload Photo" class="disabled"><i class="material-icons">file_upload</i></a>   -->
                 <a href="#" id="download-photo" download="selfie.png" title="Save Photo" class="disabled"><i class="material-icons">file_download</i></a>  
             </div>
 
@@ -30,6 +30,22 @@
         </div>
         <div class="container">
             <div class="app">
+                <div id="take-in">
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><label for="">name:</label></td>
+                                <td><input id="name" type="text" name="name" required></td>
+                            </tr>
+                            <tr>
+                                <td><input type="button" id="upload-photo" class="disabled" value="Upload Photo"></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
                 <div id="op">
                     <span>Message: <span id="res_msg"></span></span> <br>
                     <span>Distance: <span id="res_dis"></span></span>
