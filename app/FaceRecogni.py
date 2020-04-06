@@ -1,5 +1,6 @@
 from app import app
-import os, sys
+import os
+import sys
 import timeit
 from flask import Flask, request, jsonify, render_template
 import numpy as np
@@ -23,6 +24,8 @@ app_collection = db['app']
 ###########################################################
 bcrypt = Bcrypt(app)
 ###########################################################
+
+
 def token_required(f):
     @wraps(f)
     def decorator():
@@ -34,43 +37,47 @@ def token_required(f):
         if not token:
             return(jsonify(message='Token Missing'))
 
-        t = app_collection.find_one({'token':token})
+        t = app_collection.find_one({'token': token})
 
         if t is not None:
-            current_user=t['id']
-        else :
+            current_user = t['id']
+        else:
             return(jsonify(message='Invalid Token'))
 
         return f(current_user)
     return decorator
 ###########################################################
 
+
 @app.route('/test')
 @token_required
 def test_func(app_name):
-    return(jsonify(message="test successfull",user=app_name))
+    return(jsonify(message="test successfull", user=app_name))
+
 
 @app.route('/gettoken')
 def gettoken():
-    auth=request.authorization
-    if not auth or not auth.username or not auth.password :
-        return(jsonify(message='could not verify user',code='401'))
+    auth = request.authorization
+    if not auth or not auth.username or not auth.password:
+        return(jsonify(message='could not verify user', code='401'))
     else:
-        user = app_collection.find_one({'id':auth.username},{'_id':0})
+        user = app_collection.find_one({'id': auth.username}, {'_id': 0})
         if bcrypt.check_password_hash(user['pwd'], auth.password):
-            if 'token' not in user :        
+            if 'token' not in user:
                 token = secrets.token_urlsafe(20)
-                app_collection.update_one({'id':auth.username},{"$set":{"token":token}})
-                return(jsonify({'token':token}))
-            else :
-                return(jsonify({'token':user['token']}))
-        else :
+                app_collection.update_one({'id': auth.username}, {
+                                          "$set": {"token": token}})
+                return(jsonify({'token': token}))
+            else:
+                return(jsonify({'token': user['token']}))
+        else:
             return(jsonify(message='wrong password'))
     return(jsonify(message='unexpected error occured'))
 
+
 @app.route('/getall', methods=['GET'])
 def home():
-    if request.method=='GET' :
+    if request.method == 'GET':
         dict = {}
         dat = collection.find({}, {'name': 1})
         for i in dat:
@@ -80,15 +87,16 @@ def home():
                 pass
         print(dict)
         return render_template('index.html', data=dict)
-    else :
+    else:
         return(jsonify(message='INVALID HTTP METHOD'))
 
-@app.route('/createapp', methods=['POST','GET'])
+
+@app.route('/createapp', methods=['POST', 'GET'])
 def createapp():
     if request.method == 'POST':
-        if 'id' in request.form and 'pwd' in request.form :
+        if 'id' in request.form and 'pwd' in request.form:
             password = bcrypt.generate_password_hash(request.form['pwd'])
-            app_collection.insert({'id':request.form['id'],'pwd':password})
+            app_collection.insert({'id': request.form['id'], 'pwd': password})
             return(jsonify(message='app created'))
         else:
             return(jsonify(message='missing parameters'))
@@ -108,7 +116,7 @@ body:{  image:<img.jpg>,
 @token_required
 @cross_origin(origin='*')
 def learn(app_name):
-    if request.method == 'POST': 
+    if request.method == 'POST':
         if 'image' in request.files and 'name' in request.form:
             # start = timeit.timeit()             # start time --1
             file = request.files['image']
@@ -118,11 +126,10 @@ def learn(app_name):
             sav = os.path.join(path, secure_filename(file.filename))
             file.save(sav)
             return(learn_encoding(sav, name, app_name))
-        else :
+        else:
             return(jsonify(message="FILE or NAME missing"))
     else:
         return(jsonify(message="INVALID HTTP METHOD"))
-
 
 
 """
@@ -136,7 +143,7 @@ body:{  image:<img.jpg>
 @token_required
 def compare(app_name):
     if request.method == 'POST':
-        if 'image' in request.files :
+        if 'image' in request.files:
             file = request.files['image']
             if file.filename == '':
                 return(jsonify(message="no filename"))
@@ -145,32 +152,34 @@ def compare(app_name):
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                return (compare_mod(sav,app_name))
+                return (compare_mod(sav, app_name))
             return jsonify(message="sorry")
-        else :
-            return(jsonify(message="FILE NOT FOUND"))    
+        else:
+            return(jsonify(message="FILE NOT FOUND"))
     else:
         return(jsonify(status='403', message='method not allowed'))
 
-@app.route('/checklabel', methods=['GET','POST'])
+
+@app.route('/checklabel', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def checklabel():
-    if request.method == 'POST' :
+    if request.method == 'POST':
         if 'image' in request.files and 'name' in request.form:
             file = request.files['image']
             name = request.form['name']
             if file.filename == '':
                 return(jsonify(message="error with filename"))
-            else :
+            else:
                 path = os.path.join(os.getcwd(), 'app/static/')
                 sav = os.path.join(path, secure_filename(file.filename))
                 file.save(sav)
-                result=searchAndCompare(sav,name)
+                result = searchAndCompare(sav, name)
                 return(result)
         else:
-            return(jsonify(message="Missing Parameters"))    
-    else: 
+            return(jsonify(message="Missing Parameters"))
+    else:
         return(jsonify(status='403', message='method not allowed'))
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
@@ -182,8 +191,8 @@ def learn_encoding(path, name, app):
         x = []
         try:
             encoding = get_encoding(path)
-        except Exception as e :
-            return({'message':"Sorry, unable to detect face.. change the image and try again"})
+        except Exception as e:
+            return({'message': "Sorry, unable to detect face.. change the image and try again"})
 
         for i, item in enumerate(encoding):
             x.insert(i, item)
@@ -196,7 +205,7 @@ def learn_encoding(path, name, app):
 
 
 def fetch_faces(app_name):
-    data = collection.find({'app':app_name})
+    data = collection.find({'app': app_name})
     known_names = []
     known_encodings = []
     for i, item in enumerate(data):
@@ -206,9 +215,9 @@ def fetch_faces(app_name):
     return known_names, encodings
 
 
-def compare_mod(path,app_name):
+def compare_mod(path, app_name):
     k_names, encodes = fetch_faces(app_name)
-    if len(k_names)== 0 :
+    if len(k_names) == 0:
         return(jsonify(message='No data available'))
     else:
         try:
@@ -218,38 +227,42 @@ def compare_mod(path,app_name):
             best_match = k_names[rank]
             # set compare threshold [lesser the value better the accuracy]
             if dist[rank] < 0.4000:
-                return({'best_match':best_match, 'distance':dist[rank]})
+                return({'best_match': best_match, 'distance': dist[rank]})
             else:
                 return jsonify(message='unknown')
-        except Exception as e :
-            return({'message':"Sorry, unable to detect face.. change the image and try again"})
-
-    
+        except Exception as e:
+            return({'message': "Sorry, unable to detect face.. change the image and try again"})
 
 
 def get_encoding(path):
     try:
         id1 = face_recognition.load_image_file(path)
-        encoding = face_recognition.face_encodings(id1)[0]  # to pass first index of ndarray
+        encoding = face_recognition.face_encodings(
+            id1)[0]  # to pass first index of ndarray
         return encoding
-    except Exception as e :
-        return({'message':"Sorry, unable to detect face.. change the image and try again"})
+    except Exception as e:
+        return({'message': "Sorry, unable to detect face.. change the image and try again"})
 
-def searchAndCompare(img,name):
+
+def searchAndCompare(img, name):
     try:
         test_encode = get_encoding(img)
     except Exception as e:
-        return({'message':"Sorry, unable to detect face.. change the image and try again"})
-    
-    data = collection.find_one({"name": name},{'name': 1, 'encoding':1})
+        return({'message': "Sorry, unable to detect face.. change the image and try again"})
+
+    data = collection.find_one({"name": name}, {'name': 1, 'encoding': 1})
     if data is None:
         return(jsonify(message='No Data Related'))
-    else :
-        encodes = []
-        encodes.insert(0,data['encoding'])
-        encode_data = np.asarray(encodes)
-        dist = face_recognition.face_distance(encode_data, test_encode)[0]
-        if dist < 0.400 :
-            return(jsonify(message='image matches the label', distance=dist))
-        else :
-            return(jsonify(message='unmatched label'))
+    else:
+        try:
+
+            encodes = []
+            encodes.insert(0, data['encoding'])
+            encode_data = np.asarray(encodes)
+            dist = face_recognition.face_distance(encode_data, test_encode)[0]
+            if dist < 0.400:
+                return(jsonify(message='image matches the label', distance=dist))
+            else:
+                return(jsonify(message='unmatched label'))
+        except Exception as e:
+            return({'message': "Unexpected Error. Please Try Again With Valid Input"})
