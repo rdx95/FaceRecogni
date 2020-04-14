@@ -246,13 +246,10 @@ def searchAndCompare(img,name):
         return(jsonify(message='No Data Related'))
     else :
         encodes = []
-        try:
-            encodes.insert(0,data['encoding'])
-            encode_data = np.asarray(encodes)
-            dist = face_recognition.face_distance(encode_data, test_encode)[0]
-            if dist < 0.400 :
-                return(jsonify(message='image matches the label', distance=dist))
-            else :
-                return(jsonify(message='unmatched label'))
-        except Exception as e:
-            return({'message':'Error with internal data'})
+        encodes.insert(0,data['encoding'])
+        encode_data = np.asarray(encodes)
+        dist = face_recognition.face_distance(encode_data, test_encode)[0]
+        if dist < 0.400 :
+            return(jsonify(message='image matches the label', distance=dist))
+        else :
+            return(jsonify(message='unmatched label'))
