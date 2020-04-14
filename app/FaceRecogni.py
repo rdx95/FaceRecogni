@@ -254,9 +254,8 @@ def searchAndCompare(img, name):
     if data is None:
         return(jsonify(message='No Data Related'))
     else:
+        encodes = []
         try:
-
-            encodes = []
             encodes.insert(0, data['encoding'])
             encode_data = np.asarray(encodes)
             dist = face_recognition.face_distance(encode_data, test_encode)[0]
@@ -265,4 +264,4 @@ def searchAndCompare(img, name):
             else:
                 return(jsonify(message='unmatched label'))
         except Exception as e:
-            return({'message': "Unexpected Error. Please Try Again With Valid Input"})
+            return({'message': "Error with data to compare"})
