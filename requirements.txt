@@ -26,7 +26,7 @@ kiwisolver==1.1.0
 MarkupSafe==1.1.1
 mistune==0.8.4
 mongo-wrapper==1.0.0
-nbconvert==5.6.1
+nbconvert==6.3.0
 nbformat==4.4.0
 numpy==1.17.4
 pandas==0.25.0
